@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthService {
     
     @Autowired
-    private final UserServiceImpl userService;
+    private final UserServiceImpl userServiceImpl;
     @Autowired
     private final JwtsService jwtsService;
     @Autowired
@@ -40,7 +40,6 @@ public class AuthService {
     public ResponseEntity<?> register(RegisterRequest registerRequest) {
 
         Matcher matcher = emailFormatChecker(registerRequest.getEmail());
-
         if (matcher.matches() == false)
             return new ResponseEntity<String>("Format email invalide.", HttpStatus.BAD_REQUEST);
 
@@ -51,13 +50,11 @@ public class AuthService {
         AuthResponse authResponse = new AuthResponse();
 
         try {
-            existingUser = userService.getUserByEmail(registerRequest.getEmail()); 
-
+            existingUser = userServiceImpl.getUserByEmail(registerRequest.getEmail());
             if (existingUser != null) 
                 return new ResponseEntity<String>("Cet email existe déjà, connectez-vous à votre compte.", HttpStatus.FORBIDDEN);  
 
-        } catch (HttpStatusCodeException exception) { 
-
+        } catch (HttpStatusCodeException exception) {
             status = exception.getStatusCode();
             return new ResponseEntity<String>("Impossible de vérifier l'email.", status);
 
@@ -73,21 +70,17 @@ public class AuthService {
         newUser.setUpdated_at(new Date());        
 
         try {
-			userService.createUser(newUser);
-
+            userServiceImpl.createUser(newUser);
             jwtsToken = jwtsService.generateToken(newUser);
             jwteToken = jwteService.encode(jwtsToken);
             authResponse.setToken(jwteToken);
 
-		} catch (HttpStatusCodeException exception) {	
-
+        } catch (HttpStatusCodeException exception) {
             status = exception.getStatusCode();
             return new ResponseEntity<String>("Impossible de créer le compte.", status);
-
-		} catch (Exception e) { 
+        } catch (Exception e) { 
             e.printStackTrace(); 
         }
-
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 registerRequest.getEmail(), registerRequest.getPassword()
@@ -99,7 +92,6 @@ public class AuthService {
     public ResponseEntity<?> login(LoginRequest loginRequest) {
 
         Matcher matcher = emailFormatChecker(loginRequest.getEmail());
-
         if (matcher.matches() == false)
             return new ResponseEntity<String>("Format email invalide.", HttpStatus.BAD_REQUEST);
             
@@ -110,8 +102,7 @@ public class AuthService {
         AuthResponse authResponse = new AuthResponse();
 
         try {
-            userApp = userService.getUserByEmail(loginRequest.getEmail());
-
+            userApp = userServiceImpl.getUserByEmail(loginRequest.getEmail());
             if (userApp == null)
                 return new ResponseEntity<String>("Email inconnu, veuillez créer un compte.", HttpStatus.NOT_FOUND);
                 
@@ -122,8 +113,7 @@ public class AuthService {
             jwteToken = jwteService.encode(jwtsToken);
             authResponse.setToken(jwteToken);
 
-        } catch (HttpStatusCodeException exception) {  
-
+        } catch (HttpStatusCodeException exception) {
             status = exception.getStatusCode();
             return new ResponseEntity<String>("Échec de la récupération de l'utilisateur.", status);
 
@@ -144,10 +134,9 @@ public class AuthService {
         HttpStatus status;
         
         try {
-            userApp = userService.getUserByEmail(userDetails.getUsername()); 
+            userApp = userServiceImpl.getUserByEmail(userDetails.getUsername()); 
 
         } catch (HttpStatusCodeException exception) {
-
             status = exception.getStatusCode();
             return new ResponseEntity<String>("Échec de la récupération de l'utilisateur.", status);
 
@@ -162,7 +151,6 @@ public class AuthService {
         String regx = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
         Pattern pattern = Pattern.compile(regx);
         Matcher matcher = pattern.matcher(email);
-
         return matcher;
     }    
 }

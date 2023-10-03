@@ -39,7 +39,7 @@ public class RentalServiceImpl implements RentalService {
     @Autowired
     private final RentalRepository rentalRepository;
     @Autowired
-    private final UserServiceImpl userService;
+    private final UserServiceImpl userServiceImpl;
     private final String UPLOAD_DIR = "./src/main/resources/static/uploads/";
 
     @Override
@@ -64,8 +64,7 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
-    public String deleteRental(Long id) throws Exception {
-        
+    public String deleteRental(Long id) throws Exception {        
         rentalRepository.deleteById(id);
         return "La location a bien été supprimée";
     }
@@ -104,8 +103,7 @@ public class RentalServiceImpl implements RentalService {
             }          
             rentalsResponse.setRentals(rentalsJpo);        
 
-        } catch (HttpStatusCodeException exception) {
-         
+        } catch (HttpStatusCodeException exception) {         
             status = exception.getStatusCode();
             return new ResponseEntity<String>("Échec de la récupération des locations.", status);
 
@@ -122,8 +120,7 @@ public class RentalServiceImpl implements RentalService {
         HttpStatus status;
 
         try {
-            rental = getRental(id);            
-                
+            rental = getRental(id);
             rentalJpo.setId(rental.getId());
             rentalJpo.setName(rental.getName());
             rentalJpo.setSurface(rental.getSurface());
@@ -135,8 +132,7 @@ public class RentalServiceImpl implements RentalService {
             rentalJpo.setUpdated_at(rental.getUpdated_at());
             
         } catch (HttpStatusCodeException exception) {
-
-            status = exception.getStatusCode();            
+            status = exception.getStatusCode();
             return new ResponseEntity<String>("Échec de la récupération de la location.", status);
 
         } catch (Exception e) {
@@ -186,12 +182,11 @@ public class RentalServiceImpl implements RentalService {
         rental.setPicture(baseUrl + "/uploads/" + fileName);
 
         try { 
-            userApp = userService.getUserByEmail(userDetails.getUsername());
+            userApp = userServiceImpl.getUserByEmail(userDetails.getUsername());
             rental.setOwner_id(userApp);
             createRental(rental);
 
         } catch (HttpStatusCodeException exception) {
-
             status = exception.getStatusCode();
             return new ResponseEntity<String>("Échec de la création de la location.", status);
 
@@ -224,7 +219,6 @@ public class RentalServiceImpl implements RentalService {
             updateRental(rental);
 
         } catch (HttpStatusCodeException exception) {
-
             status = exception.getStatusCode();
             return new ResponseEntity<String>("Échec de la modification de la location.", status);
 

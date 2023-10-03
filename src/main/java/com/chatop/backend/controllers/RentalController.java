@@ -2,6 +2,7 @@ package com.chatop.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,28 +17,29 @@ import org.springframework.web.bind.annotation.RestController;
 import com.chatop.backend.jpo.rental.RentalRequest;
 import com.chatop.backend.services.rental.RentalServiceImpl;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
+@SecurityRequirement(name = "spring_oauth")
+@PreAuthorize("hasAuthority('SCOPE_read_access')")
 @RequiredArgsConstructor
-@Api("Rentals CRUD operations.")
 @RequestMapping("/api/rentals")
 public class RentalController {
     
     @Autowired
-    private final RentalServiceImpl rentalService;
+    private RentalServiceImpl rentalService;
 
-    @ApiOperation("Get all rentals.")
+    @Operation(description = "Get all rentals.")
     @GetMapping
     public ResponseEntity<?> getAllRentals(
     ) {
         return rentalService.fetchListRentals();            
     }
 
-    @ApiOperation("Get rental by id.")
+    @Operation(description = "Get rental by id.")
     @GetMapping("/{id}")
     public ResponseEntity<?> getRental(
         @PathVariable(name = "id") Long id
@@ -45,7 +47,7 @@ public class RentalController {
         return rentalService.fetchRental(id);
     }
     
-    @ApiOperation("Create rental.")
+    @Operation(description = "Create rental.")
     @PostMapping(value="", consumes = {"*/*"}, produces = {"*/*"})
     public ResponseEntity<?> createRental(
         @ModelAttribute RentalRequest rentalRequest,
@@ -54,7 +56,7 @@ public class RentalController {
         return rentalService.buildRental(rentalRequest, userDetails);
     }
 
-    @ApiOperation("Update rental.")
+    @Operation(description = "Update rental.")
     @PutMapping(path ="/{id}", consumes = {"*/*"}, produces = {"*/*"})
     public ResponseEntity<?> updateRental(
         @PathVariable(name = "id") Long id,

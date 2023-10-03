@@ -27,11 +27,11 @@ import lombok.RequiredArgsConstructor;
 public class MessageServiceImpl implements MessageService {
 
     @Autowired
-    private final MessageRepository messageRepository;
+    private MessageRepository messageRepository;
     @Autowired
-    private final UserServiceImpl userService;
+    private final UserServiceImpl userServiceImpl;
     @Autowired
-    private final RentalServiceImpl rentalService;
+    private final RentalServiceImpl rentalServiceImpl;
 
     @Override
     public Message createMessage(Message message) throws Exception {
@@ -56,7 +56,6 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public String deleteMessage(Long id) throws Exception {
-        
         messageRepository.deleteById(id);
         return "Le message a bien été supprimé";
     }
@@ -79,15 +78,13 @@ public class MessageServiceImpl implements MessageService {
         message.setUpdated_at(new Date());
 
         try { 
-            user = userService.getUser(messageRequest.getUser_id());
+            user = userServiceImpl.getUser(messageRequest.getUser_id());
             message.setUser_id(user);
-            
-            rental = rentalService.getRental(messageRequest.getRental_id());
+            rental = rentalServiceImpl.getRental(messageRequest.getRental_id());
             message.setRental_id(rental);
             createMessage(message);
 
         } catch (HttpStatusCodeException exception) {
-
             status = exception.getStatusCode();
             messageResponse.setMessage("Échec de l'envoi du message.");
             return new ResponseEntity<MessageResponse>(messageResponse, status);

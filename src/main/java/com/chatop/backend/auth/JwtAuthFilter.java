@@ -26,11 +26,11 @@ import lombok.RequiredArgsConstructor;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
-    private final JwtsService jwtsService;
+    private JwtsService jwtsService;
     @Autowired
-    private final JwteService jwteService;
+    private JwteService jwteService;
     @Autowired
-    private final UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(
@@ -44,28 +44,24 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String jwte;
         final String userEmail;
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {            
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
-
         jwte = authHeader.substring(7);
         jwts = jwteService.decode(jwte);
-
         userEmail = jwtsService.extractUsername(jwts);
 
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-
             if (jwtsService.isTokenValid(jwts, userDetails)) {
                 
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,
                     userDetails.getAuthorities()
-                );
-                
+                );                
                 authToken.setDetails(
                     new WebAuthenticationDetailsSource().buildDetails(request)
                 );

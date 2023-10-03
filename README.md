@@ -25,6 +25,8 @@ Add your database credentials to the application.properties file :
 >spring.datasource.password=${DB_PASSWORD}
 
 Launch the backend server with Spring Boot and Maven :
+> mvn clean  
+> mvn install  
 > mvn spring-boot:run
 
 - Front-end :
@@ -40,9 +42,33 @@ Launch Front-end:
 
 Navigate to `http://localhost:4200/`.
 
-## Swagger
+## Swagger UI
 
-The Swagger UI is available on `http://localhost:3001/swagger-ui/index.html`.
+The Swagger UI is available at `http://localhost:3001/swagger-ui/index.html`.
+
+Use your Google account to try all the APIs :
+
+1 - Go to the OAuth 2.0 credentials registration
+[https://console.developers.google.com/apis/credentials](https://console.developers.google.com/apis/credentials)
+
+2 - click on credentials from the left dashboard 
+> -> Create  Credentials -> OAuth client ID
+
+3 - in the form  
+. set a name for the client OAuth 2.0 web application.  
+. add the JavaScript Origins : http://localhost:3001  
+. add both authorized redirect URLs :   
+http://localhost:3001/login/oauth2/code/google  
+http://localhost:3001/swagger-ui/oauth2-redirect.html
+
+4 - Save your `client ID` and `client secret`, to set them to the `application.properties` file, under the Google properties :
+> spring.security.oauth2.client.registration.google.client-id=${CLIENT_ID}  
+
+> spring.security.oauth2.client.registration.google.client-secret=${CLIENT_SECRET} 
+
+5 - in the [swagger UI](http://localhost:3001/swagger-ui/index.html)  
+. click on the `Authorize`🔓 button  
+. select all the scopes
 
 ## Architecture Back-end
 
@@ -52,3 +78,6 @@ The Swagger UI is available on `http://localhost:3001/swagger-ui/index.html`.
 - `services` folder: Business Logic layer. 
 - `jpa_repositories` folder: Data Access layer.
 - `models` folder: contains all the data entity classes.
+
+## ✍ Author
+Daphné Duchêne

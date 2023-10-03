@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -34,50 +33,42 @@ public class SpringSecurityConfig {
             .cors(withDefaults())
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests()
-            .antMatchers(  
-                "/api/auth/register", 
-                "/api/auth/login"
+            .antMatchers(
+                    "/api/auth/register",
+                    "/api/auth/login",
+                    "/swagger-ui/**",
+                    "/v2/api-docs/**",
+                    "/v3/api-docs/**",
+                    "/swagger-resources/**",
+                    "/swagger-ui.html",
+                    "/webjars/**",
+                    "/view/**",
+                    "/swagger.json",
+                    "/uploads/**",
+                    "/configuration/**",
+                    "/oauth/**"
             )
             .permitAll()
             .anyRequest().authenticated()
             .and()
             .sessionManagement(
                 management -> management
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authenticationProvider(authenticationProvider)
             .addFilterBefore(
-                jwtAuthFilter, 
+                jwtAuthFilter,
                 UsernamePasswordAuthenticationFilter.class
             );
-
         http
             .headers( 
                 headers -> headers
                 .frameOptions()
                 .sameOrigin()
             );
-
         return http.build();
     }
-
-    @Bean
-    WebSecurityCustomizer webSecurityCustomizer() {
-        return (webSecurity) -> webSecurity
-         .ignoring()
-         .antMatchers(
-            "/swagger-ui/**",
-            "/v2/api-docs",
-            "/configuration/ui",
-            "/swagger-resources/**",
-            "/configuration/security",
-            "/swagger-ui.html",
-            "/webjars/**",
-            "/view/**",
-            "/swagger.json",
-            "/uploads/**",
-            "/configuration/**"
-         );
-    }
 }
+
+
 

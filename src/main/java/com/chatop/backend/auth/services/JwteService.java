@@ -19,9 +19,9 @@ import com.nimbusds.jwt.SignedJWT;
 public class JwteService {
     
     RSAKey publicJWK;
-	RSAKey keyPublicJWK;
+    RSAKey keyPublicJWK;
 
-	public JwteService() {
+    public JwteService() {
 		try {
 			this.publicJWK = new RSAKeyGenerator(4096).keyID("456").keyUse(KeyUse.ENCRYPTION).generate();
 			this.keyPublicJWK = publicJWK.toPublicJWK();
@@ -29,49 +29,41 @@ public class JwteService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+    }
+
+    public String encode(String jwts) {
+	try {
+	    SignedJWT parsed = SignedJWT.parse(jwts);            
+	    JWEObject jweObject = new JWEObject(
+			new JWEHeader.Builder(
+				JWEAlgorithm.RSA_OAEP_256, 
+				EncryptionMethod.A256GCM
+			)
+			.contentType(jwts)
+			.build(),
+			new Payload(parsed)
+	    );
+	    jweObject.encrypt(new RSAEncrypter(this.keyPublicJWK));            
+	    String jweString = jweObject.serialize();
+	    return jweString;
+
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
-
-	public String encode(String jwts) {
-		try {
-			SignedJWT parsed = SignedJWT.parse(jwts);            
-			JWEObject jweObject = new JWEObject(
-
-				new JWEHeader.Builder
-					(
-						JWEAlgorithm.RSA_OAEP_256, 
-						EncryptionMethod.A256GCM
-					)
-					.contentType(jwts)
-					.build(),
-
-					new Payload(parsed)
-				);
-
-			jweObject.encrypt(new RSAEncrypter(this.keyPublicJWK));            
-			String jweString = jweObject.serialize();
-
-			return jweString;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
-		return "";
-	}
+	return "";
+    }
 	
-	public String decode(String token) {
+    public String decode(String token) {
 		try {
 			EncryptedJWT parse = EncryptedJWT.parse(token);
-            
 			RSADecrypter decrypte = new RSADecrypter(this.publicJWK);
 			parse.decrypt(decrypte);
-
 			SignedJWT signedJWT = parse.getPayload().toSignedJWT();
-            
 			return signedJWT.serialize();
 
 		} catch (Exception e) {
-			e.printStackTrace();			
-		} 
+			e.printStackTrace();
+		}
 		return "";
-	}
+    }
 }

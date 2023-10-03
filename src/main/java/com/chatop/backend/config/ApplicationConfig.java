@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class ApplicationConfig {
     
     @Autowired
-    private final UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Bean
     UserDetailsService userDetailsService() {
@@ -34,10 +34,8 @@ public class ApplicationConfig {
     @Bean
     AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-
         authProvider.setUserDetailsService(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
-
         return authProvider;
     }
 

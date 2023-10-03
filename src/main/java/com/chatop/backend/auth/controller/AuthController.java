@@ -2,6 +2,7 @@ package com.chatop.backend.auth.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,21 +16,20 @@ import com.chatop.backend.auth.jpo.LoginRequest;
 import com.chatop.backend.auth.jpo.RegisterRequest;
 import com.chatop.backend.auth.services.AuthService;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequiredArgsConstructor
-@Api("Register and Login requests.")
 @RequestMapping("/api/auth")
 public class AuthController {
     
     @Autowired
     private final AuthService authService;
 
-    @ApiOperation("Register.")
+    @Operation(description = "Register.")
     @PostMapping("/register")
     public ResponseEntity<?> register(
         @RequestBody RegisterRequest request
@@ -37,7 +37,7 @@ public class AuthController {
         return authService.register(request);
     }
     
-    @ApiOperation("Login.")
+    @Operation(description = "Login.")
     @PostMapping("/login")
     public ResponseEntity<?> login(
         @RequestBody LoginRequest request
@@ -45,7 +45,9 @@ public class AuthController {
         return authService.login(request);
     }
 
-    @ApiOperation("Get user logged.")
+    @Operation(description = "Get user logged.")
+    @SecurityRequirement(name = "spring_oauth")
+    @PreAuthorize("hasAuthority('SCOPE_read_access')")
     @GetMapping("/me")
     public ResponseEntity<?> getUserApp(
         @AuthenticationPrincipal

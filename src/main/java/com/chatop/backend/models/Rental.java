@@ -3,15 +3,21 @@ package com.chatop.backend.models;
 import java.util.Date;
 
 import javax.persistence.*;
-import lombok.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Data
 @Table(name = "rentals")
 @Entity 
 @Getter 
-@Setter 
-@AllArgsConstructor 
-@NoArgsConstructor 
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
 public class Rental {
     
