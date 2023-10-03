@@ -6,7 +6,7 @@
 
 - [Angular CLI](https://github.com/angular/angular-cli) version 14.1.3
 - Node.js
-- [Java 11](https://www.oracle.com/java/technologies/downloads/) last LTS version 11.0.20
+- [Java 17](https://www.oracle.com/java/technologies/downloads/)
 - Spring Boot
 - [MySQL](https://www.mysql.com/fr/downloads/)
 
@@ -25,8 +25,7 @@ Add your database credentials to the application.properties file :
 >spring.datasource.password=${DB_PASSWORD}
 
 Launch the backend server with Spring Boot and Maven :
-> mvn clean  
-> mvn install  
+> mvn clean   
 > mvn spring-boot:run
 
 - Front-end :
