@@ -70,7 +70,7 @@ To get access to all the APIs :
 
 ### ⚠ Warning
 This project was built with VSCode,
-that results of some wrong code indentation for some classes, depending on your IDE.
+that results to some wrong code indentation for some classes, depending on your IDE.
 
 ## ✍ Author
 Daphné Duchêne
