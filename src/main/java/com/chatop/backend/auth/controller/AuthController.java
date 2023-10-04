@@ -2,7 +2,6 @@ package com.chatop.backend.auth.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,7 +28,7 @@ public class AuthController {
     @Autowired
     private final AuthService authService;
 
-    @Operation(description = "Register.")
+    @Operation(summary = "Register an user.")
     @PostMapping("/register")
     public ResponseEntity<?> register(
         @RequestBody RegisterRequest request
@@ -37,7 +36,7 @@ public class AuthController {
         return authService.register(request);
     }
     
-    @Operation(description = "Login.")
+    @Operation(summary = "Log an user.")
     @PostMapping("/login")
     public ResponseEntity<?> login(
         @RequestBody LoginRequest request
@@ -45,9 +44,8 @@ public class AuthController {
         return authService.login(request);
     }
 
-    @Operation(description = "Get user logged.")
-    @SecurityRequirement(name = "spring_oauth")
-    @PreAuthorize("hasAuthority('SCOPE_read_access')")
+    @Operation(summary = "Find the logged user.")
+    @SecurityRequirement(name = "openapi")
     @GetMapping("/me")
     public ResponseEntity<?> getUserApp(
         @AuthenticationPrincipal

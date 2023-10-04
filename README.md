@@ -1,6 +1,6 @@
 # Estate by ChâTop
 
-🏡 Find your next vacation rental.
+🏡 Find your next vacation rental and offer your properties for seasonal rental.
 
 ## 🛠 Software tools
 
@@ -14,9 +14,11 @@
 
 - MySQL :
 
-The database name is `estate_db`.
+Create a database with the name `estate_db`.
 
-- Back-end :
+- Back-end :  
+
+Clone this repository :
 > git clone https://github.com/duchenedaphne/estate
 
 Add your database credentials to the application.properties file :
@@ -24,59 +26,51 @@ Add your database credentials to the application.properties file :
 
 >spring.datasource.password=${DB_PASSWORD}
 
-Launch the backend server with Spring Boot and Maven :
-> mvn clean   
+Launch the backend server with Spring Boot and Maven :  
 > mvn spring-boot:run
 
 - Front-end :
+
+Clone the `estate-frontend` repository :
 > git clone https://github.com/duchenedaphne/estate-frontend
 
-Install dependencies:
+Install the dependencies :
 
 > npm install
 
-Launch Front-end:
+Launch the frontend :
 
 > npm run start
 
-Navigate to `http://localhost:4200/`.
+Navigate to http://localhost:4200/.
 
 ## Swagger UI
 
-The Swagger UI is available at `http://localhost:3001/swagger-ui/index.html`.
+The Swagger UI is available at http://localhost:3001/swagger-ui/index.html.
 
-Use your Google account to try all the APIs :
+To get access to all the APIs :
 
-1 - Go to the OAuth 2.0 credentials registration
-[https://console.developers.google.com/apis/credentials](https://console.developers.google.com/apis/credentials)
+1 - try the `POST` /api/auth/register endpoint from the `auth-controller`.
 
-2 - click on credentials from the left dashboard 
-> -> Create  Credentials -> OAuth client ID
+2 - copy the token value from the `Response body`.
 
-3 - in the form  
-. set a name for the client OAuth 2.0 web application.  
-. add the JavaScript Origins : http://localhost:3001  
-. add both authorized redirect URLs :   
-http://localhost:3001/login/oauth2/code/google  
-http://localhost:3001/swagger-ui/oauth2-redirect.html
+3 - click on the `Authorize`🔓 button.
 
-4 - Save your `client ID` and `client secret`, to set them to the `application.properties` file, under the Google properties :
-> spring.security.oauth2.client.registration.google.client-id=${CLIENT_ID}  
-
-> spring.security.oauth2.client.registration.google.client-secret=${CLIENT_SECRET} 
-
-5 - in the [swagger UI](http://localhost:3001/swagger-ui/index.html)  
-. click on the `Authorize`🔓 button  
-. select all the scopes
+4 - paste the token value into the field.
 
 ## Architecture Back-end
 
-- `auth` folder: manage the authentication and registration on the app.
-- `config` folder: contains all the configuration files.
-- `controllers` folder: Presentation layer - Rest Controllers.
-- `services` folder: Business Logic layer. 
-- `jpa_repositories` folder: Data Access layer.
-- `models` folder: contains all the data entity classes.
+- `auth` folder : manage the users authentication and registration on the app.
+- `config` folder : contains all the configuration files.
+- `controllers` folder : contains the Presentation layer with the Rest Controllers.
+- `services` folder : contains the Business Logic layer. 
+- `repositories` folder: contains the Data Access layer.
+- `models` folder : contains all the data entity classes.
+- `jpo` folder : contains the java plain objects.
+
+### ⚠ Warning
+This project was built with VSCode,
+that results of some wrong code indentation for some classes, depending on your IDE.
 
 ## ✍ Author
 Daphné Duchêne

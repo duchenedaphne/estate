@@ -2,7 +2,6 @@ package com.chatop.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,8 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@SecurityRequirement(name = "spring_oauth")
-@PreAuthorize("hasAuthority('SCOPE_read_access')")
+@SecurityRequirement(name = "openapi")
 @RequiredArgsConstructor
 @RequestMapping("/api/messages")
 public class MessageController {
@@ -28,7 +26,7 @@ public class MessageController {
     @Autowired
     private MessageServiceImpl messageService;
     
-    @Operation(description = "Post message.")
+    @Operation(summary = "Send a message.")
     @PostMapping
     public ResponseEntity<MessageResponse> createMessage(
         @RequestBody MessageRequest request

@@ -2,7 +2,6 @@ package com.chatop.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,8 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@SecurityRequirement(name = "spring_oauth")
-@PreAuthorize("hasAuthority('SCOPE_read_access')")
+@SecurityRequirement(name = "openapi")
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
 public class UserController {
@@ -26,7 +24,7 @@ public class UserController {
     @Autowired
     private UserServiceImpl userService;
 
-    @Operation(description = "Get user by id.")
+    @Operation(summary = "Find an user.")
     @GetMapping("/{id}")
     public ResponseEntity<?> getUser(
         @PathVariable(name = "id") Long id
