@@ -4,10 +4,9 @@
 
 ## 🛠 Software tools
 
-- [Angular CLI](https://github.com/angular/angular-cli) version 14.1.3
-- Node.js
 - [Java 17](https://www.oracle.com/java/technologies/downloads/)
 - Spring Boot
+- Maven
 - [MySQL](https://www.mysql.com/fr/downloads/)
 
 ## Start the project
@@ -70,7 +69,8 @@ To get access to all the APIs :
 
 ### ⚠ Warning
 This project was built with VSCode,
-that results to some wrong code indentation for some classes, depending on your IDE.
+that results to some wrong code indentation for some classes, 
+depending on your IDE.
 
 ## ✍ Author
 Daphné Duchêne
