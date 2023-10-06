@@ -14,6 +14,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -33,6 +35,7 @@ import com.chatop.backend.services.user.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@EnableScheduling
 @RequiredArgsConstructor
 public class RentalServiceImpl implements RentalService {
 
@@ -74,6 +77,7 @@ public class RentalServiceImpl implements RentalService {
         return rentalRepository.findAll();
     }
     
+    @Scheduled(fixedRate = 60000, initialDelay = 60000)
     public ResponseEntity<?> fetchListRentals() {
 
         HttpStatus status;
@@ -81,6 +85,7 @@ public class RentalServiceImpl implements RentalService {
         RentalJpo rentalJpo;
         List<RentalJpo> rentalsJpo;
         RentalsResponse rentalsResponse = new RentalsResponse();
+        File rentalPicture;
 
         try {
             rentals = getAllRentals();
@@ -98,6 +103,10 @@ public class RentalServiceImpl implements RentalService {
                 rentalJpo.setOwner_id(rental.getOwner_id().getId());
                 rentalJpo.setCreated_at(rental.getCreated_at());
                 rentalJpo.setUpdated_at(rental.getUpdated_at());
+
+                rentalPicture = new File(rental.getPicture());
+                if (rentalPicture.exists())
+                    rentalJpo.setPicture(rental.getPicture());
                 
                 rentalsJpo.add(rentalJpo);
             }          
