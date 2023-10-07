@@ -14,8 +14,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -35,7 +33,6 @@ import com.chatop.backend.services.user.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@EnableScheduling
 @RequiredArgsConstructor
 public class RentalServiceImpl implements RentalService {
 
@@ -77,7 +74,6 @@ public class RentalServiceImpl implements RentalService {
         return rentalRepository.findAll();
     }
     
-    @Scheduled(fixedRate = 60000, initialDelay = 60000)
     public ResponseEntity<?> fetchListRentals() {
 
         HttpStatus status;
@@ -88,6 +84,7 @@ public class RentalServiceImpl implements RentalService {
         File rentalPicture;
 
         try {
+            Thread.sleep(1000);
             rentals = getAllRentals();
             rentalsJpo = new ArrayList<>();
             
@@ -110,7 +107,8 @@ public class RentalServiceImpl implements RentalService {
                 
                 rentalsJpo.add(rentalJpo);
             }          
-            rentalsResponse.setRentals(rentalsJpo);        
+            rentalsResponse.setRentals(rentalsJpo);
+            return new ResponseEntity<RentalsResponse>(rentalsResponse, HttpStatus.OK);
 
         } catch (HttpStatusCodeException exception) {         
             status = exception.getStatusCode();
@@ -119,7 +117,7 @@ public class RentalServiceImpl implements RentalService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ResponseEntity<RentalsResponse>(rentalsResponse, HttpStatus.OK);
+        return new ResponseEntity<String>("rentalsResponse", HttpStatus.OK);
     }
 
     public ResponseEntity<?> fetchRental(Long id) {
