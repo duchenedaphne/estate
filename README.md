@@ -20,7 +20,9 @@ Create a database with the name `estate_db`.
 Clone this repository :
 > git clone https://github.com/duchenedaphne/estate
 
-Add your database credentials to the application.properties file :
+Add your database credentials to the application.properties file,
+by creating 2 environment variables named DB_USER and DB_PASSWORD :
+
 >spring.datasource.username=${DB_USER}
 
 >spring.datasource.password=${DB_PASSWORD}
